@@ -29,6 +29,13 @@ app.post('/findMiddle', (req, res) => {
     res.send(JSON.stringify(cardIdNameDescList));
 })
 
+app.post('/findAllLink', (req, res) => {
+    console.log(req.body);
+    const middleCardList = smallWorld.sortCardListByName(smallWorld.compareCount(mainDeckMonsterList, mainDeckMonsterList, smallWorld.getCardIndexById(mainDeckMonsterList, req.body)));
+    const cardIdNameDescList = smallWorld.getCardIdNameDesc(middleCardList);
+    res.send(JSON.stringify(cardIdNameDescList));
+})
+
 app.listen(PORT, () => {
     console.log(`listening on port: ${PORT}`);
 })
@@ -50,10 +57,10 @@ async function setup() {
     //printCardName(compareCount(mainDeckMonsterList,mainDeckMonsterList, getCardIndexById(mainDeckMonsterList,10000080)));
     //printCardImage(55063751);
 
-    /*let result = smallWorld.compareCount(mainDeckMonsterList,mainDeckMonsterList,smallWorld.getCardIndexById(mainDeckMonsterList,94145021));
-    result = smallWorld.filterbyField(result, "race", 2);
+    let result = smallWorld.compareCount(mainDeckMonsterList,mainDeckMonsterList,smallWorld.getCardIndexById(mainDeckMonsterList,10000080));
+    //result = smallWorld.filterbyField(result, "race", 2);
     result = smallWorld.sortCardListByName(result);
-    smallWorld.printCardName(result);*/
+    smallWorld.printCardName(result);
 }
 
 setup();
