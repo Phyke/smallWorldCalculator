@@ -1,5 +1,39 @@
 const input = document.querySelectorAll('input');
 const submitButton = document.querySelector('#submitButton');
+const radioButtons = document.querySelectorAll('input[name="searchType"]');
+const radioMiddle = document.getElementById('searchMode_middle');
+const radioAllLink = document.getElementById('searchMode_allLink');
+const radioLMAO = document.getElementById('searchMode_test');
+const fieldMiddle = document.getElementById('searchField_middle');
+const fieldAllLink = document.getElementById('searchField_allLink');
+const fieldLMAO = document.getElementById('searchField_test');
+
+function switchSearchMode() {
+    if (radioMiddle.checked) {
+        fieldMiddle.style.display = 'block';
+        fieldAllLink.style.display = 'none';
+        fieldLMAO.style.display = 'none';
+    }
+    else if (radioAllLink.checked) {
+        fieldMiddle.style.display = 'none';
+        fieldAllLink.style.display = 'block';
+        fieldLMAO.style.display = 'none';
+    }
+    else if (radioLMAO.checked) {
+        fieldMiddle.style.display = 'none';
+        fieldAllLink.style.display = 'none';
+        fieldLMAO.style.display = 'block';
+    }
+    else {
+        fieldMiddle.style.display = 'none';
+        fieldAllLink.style.display = 'none';
+        fieldLMAO.style.display = 'none';
+    }
+}
+
+for (const radioBtn of radioButtons) {
+    radioBtn.addEventListener('click', switchSearchMode);
+} 
 
 submitButton.addEventListener('click', async (e) => {
     console.log(input[0].value);

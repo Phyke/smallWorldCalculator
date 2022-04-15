@@ -9,14 +9,96 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Small World Calculator</h1>
-    <label for="hand">Hand</label><input type="text" name="hand" value="2009101">
-    <label for="target">Target</label><input type="text" name="target" value="10000080">
-    <button id="submitButton">Submit</button>
-    <table id="cardlist">
-        
-    </table>
+    <div class="container-lg border border-dark ">
+        <header class="container-lg">
+            <h1 class="h1">Small World Calculator</h1>
+            <hr>
+            <div>
+                <input class="form-check-input" type="radio" name="searchType" id="searchMode_middle" value="middle">
+                <label class="form-check-label" for="searchMode_middle">I already have a hand card and a target card, I want to find a middle card</label>
+                <br>
+                <input class="form-check-input" type="radio" name="searchType" id="searchMode_allLink" value="allLink">
+                <label class="form-check-label" for="searchMode_allLink">I have a card, search all cards that can link with my card</label>
+                <br>
+                <input class="form-check-input" type="radio" name="searchType" id="searchMode_test" value="LMAO">
+                <label class="form-check-label" for="searchMode_test">LMAO test</label>
+            </div>
+            <hr>
+            <div id="searchField_middle">
+                <div class="row mb-3">
+                    <label class="col-auto col-form-label" for="hand">Hand</label>
+                    <div class="col-auto">
+                        <input class="form-control" type="text" name="hand" value="2009101">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-auto col-form-label" for="target">Target</label>
+                    <div class="col-auto">
+                        <input class="form-control" type="text" name="target" value="10000080">
+                    </div>
+                </div>
+            </div>
+            <div id="searchField_allLink">
+                <div class="row mb-3">
+                    <label class="col-auto col-form-label" for="myCard">My Card</label>
+                    <div class="col-auto">
+                        <input class="form-control" type="text" name="myCard" value="2009101">
+                    </div>
+                </div>
+            </div>
+            <div id="searchField_test">
+                LAORK
+            </div>
+            
+            <hr>
+            <div class="row mb-3">
+                <label class="col-auto col-form-label" for="atk">Filter by ATK</label>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="atk">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-auto col-form-label" for="def">Filter by DEF</label>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="def">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-auto col-form-label" for="lvl">Filter by Level</label>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="lvl">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-auto col-form-label" for="type">Filter by Type</label>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="type">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-auto col-form-label" for="attr">Filter by Attribute</label>
+                <div class="col-auto">
+                    <input class="form-control" type="text" name="attr">
+                </div>
+            </div>
+            <button class="btn btn-primary" id="submitButton">Submit</button>
+            <button class="btn btn-danger" id="clearButton">Clear</button>
+        </header>
+        <main class="container-lg">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="cardlist">
 
+                </tbody>
+            </table>
+        </main>
+    </div>
     <script src="client.js"></script>
 </body>
 </html>
