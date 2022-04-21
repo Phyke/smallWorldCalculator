@@ -1,7 +1,15 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
+import * as constants from "./constants.js";
+const test = constants.CATE_Monster_Normal;
 
 const allowedTypeList = [17, 33, 129, 161, 545, 1057, 2081,4113,4129,2097185,4194337,16777233,16777249,16777361,16777377,16781457,16781473];
+
+class CARD {
+    constructor(cardData,cardText) {
+        this.id
+    }
+}
 
 function getFieldList(cardList, field) {
     const typeList = [];
@@ -125,6 +133,7 @@ async function queryFromCDB(table) {
     //console.log(result);
 
     await db.close();
+    console.log("lmao",test);
     return result;
 }
 
