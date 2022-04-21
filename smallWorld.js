@@ -1,14 +1,102 @@
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import * as constants from "./constants.js";
-const test = constants.CATE_Monster_Normal;
 
-const allowedTypeList = [17, 33, 129, 161, 545, 1057, 2081,4113,4129,2097185,4194337,16777233,16777249,16777361,16777377,16781457,16781473];
+const allowedTypeList = [
+    constants.CATE_Monster_Normal, 
+    constants.CATE_Monster_Normal_Tuner, 
+    constants.CATE_Monster_Effect, 
+    constants.CATE_Monster_Effect_Tuner, 
+    constants.CATE_Monster_Spirit, 
+    constants.CATE_Monster_Union, 
+    constants.CATE_Monster_Gemini, 
+    constants.CATE_Monster_Flip, 
+    constants.CATE_Monster_Toon, 
+    constants.CATE_Monster_Ritual, 
+    constants.CATE_Monster_Ritual_Effect, 
+    constants.CATE_Monster_Ritual_Spirit, 
+    constants.CATE_Monster_Pendulum_Normal, 
+    constants.CATE_Monster_Pendulum_Effect, 
+    constants.CATE_Monster_Pendulum_Ritual_Normal, 
+    constants.CATE_Monster_Pendulum_Ritual_Effect, 
+    constants.CATE_Monster_Pendulum_Ritual_Normal_Tuner, 
+    constants.CATE_Monster_Pendulum_Ritual_Effect_Tuner
+];
+
+/*
+
+Map of Cards [
+    Key = Card ID
+    Value = <Card Object>
+    CardID1 : {
+        ot: <number>
+        alias: <number>
+        setcode: <number>
+        cate: <number>
+        atf: <number>
+        def: <number>
+        level: <number>
+        type: <number>
+        attribute: <number>
+        archetype: <number>
+        name: <number>
+        desc: <number>
+        other: <array> [str1, str2, ..., str16]
+    }
+]
+
+*/
 
 class CARD {
-    constructor(cardData,cardText) {
-        this.id
+    constructor(cardData, cardText) {
+        this.cate = cardData.type;
+        this.attribute = cardData.attribute;
+        this.type = cardData.race;
+        this.atk = cardData.atk;
+        this.def = cardData.def;
+        this.level = cardData.level;
+        this.name = cardText.name;
+        this.desc = cardText.desc;
+        this.moreDesc = [
+            cardText.str1, cardText.str2, cardText.str3, cardText.str4, 
+            cardText.str5, cardText.str6, cardText.str7, cardText.str8, 
+            cardText.str9, cardText.str10, cardText.str11, cardText.str12, 
+            cardText.str13, cardText.str14, cardText.str15, cardText.str16, 
+        ];
     }
+}
+
+async function queryFromCDB(fileName, table) {
+    const db = await open({
+        filename: fileName,
+        driver: sqlite3.Database,
+    });
+    const result = await db.all(`SELECT * FROM ${table}`);
+    //console.log(result);
+
+    await db.close();
+    return result;
+}
+
+function createCardMapFromArray(cardList, textList) {
+    const cardMap = new Map();
+    for (let i = 0; i < cardList.length; i++) {
+        for(let j = 0; j < textList.length; j++) {
+            if(cardList[i].id == textList[j].id) {
+                cardMap.set(cardList[i].id, new CARD(cardList[i], textList[i]));
+                break;
+            }
+        }
+    }
+    return cardMap;
+}
+
+async function getCardMap() {
+    const cardList = await queryFromCDB("cards.cdb", "datas");
+    const textList = await queryFromCDB("cards.cdb", "texts");
+    const cardMap = createCardMapFromArray(cardList, textList);
+    console.log(cardMap.size);
+    return cardMap;
 }
 
 function getFieldList(cardList, field) {
@@ -65,18 +153,6 @@ function searchMiddle(cardList, id1, id3) {
     return finalResult;
 }
 
-function mergeDataWithText(cardList, textList) {
-    for (let i = 0; i < cardList.length; i++) {
-        for(let j = 0; j < textList.length; j++) {
-            if(cardList[i].id == textList[j].id) {
-                cardList[i].name = textList[j].name;
-                cardList[i].desc = textList[j].desc;
-                break;
-            }
-        }
-    }
-}
-
 function filterbyField(cardList, field, value) {
     const result = [];
     for (const card of cardList) {
@@ -124,18 +200,7 @@ function searchAllPossible(cardList, startCardId) {
     console.log(i, ' - ' , map.size);
 }
 
-async function queryFromCDB(table) {
-    const db = await open({
-        filename: "cards.cdb",
-        driver: sqlite3.Database,
-    });
-    const result = await db.all(`SELECT * FROM ${table}`);
-    //console.log(result);
 
-    await db.close();
-    console.log("lmao",test);
-    return result;
-}
 
 function getCardIdNameDesc(cardList) {
     const result = [];
@@ -155,12 +220,13 @@ export default {
     getCardIndexById,
     compareCount,
     searchMiddle,
-    mergeDataWithText,
     filterbyField,
     printCardImage,
     sortCardListByName,
     printCardName,
     searchAllPossible,
     queryFromCDB,
-    getCardIdNameDesc
+    getCardIdNameDesc,
+    createCardMapFromArray,
+    getCardMap
 }

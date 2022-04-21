@@ -42,11 +42,12 @@ app.listen(PORT, () => {
 
 let mainDeckMonsterList;
 async function setup() {
-    let cardList = await smallWorld.queryFromCDB("datas");
+    smallWorld.getCardMap();
+    /*let cardList = await smallWorld.queryFromCDB("datas");
     let textList = await smallWorld.queryFromCDB("texts");
     smallWorld.mergeDataWithText(cardList, textList);
     mainDeckMonsterList = smallWorld.filterMainDeckMonster(cardList);
-    console.log(mainDeckMonsterList.length);
+    console.log(mainDeckMonsterList.length);*/
     
     //const x = smallWorld.searchMiddle(mainDeckMonsterList, 93013676, 45796834);
     //smallWorld.printCardName(x);
@@ -57,10 +58,10 @@ async function setup() {
     //printCardName(compareCount(mainDeckMonsterList,mainDeckMonsterList, getCardIndexById(mainDeckMonsterList,10000080)));
     //printCardImage(55063751);
 
-    let result = smallWorld.compareCount(mainDeckMonsterList,mainDeckMonsterList,smallWorld.getCardIndexById(mainDeckMonsterList,10000080));
+    //let result = smallWorld.compareCount(mainDeckMonsterList,mainDeckMonsterList,smallWorld.getCardIndexById(mainDeckMonsterList,10000080));
     //result = smallWorld.filterbyField(result, "race", 2);
-    result = smallWorld.sortCardListByName(result);
-    smallWorld.printCardName(result);
+    //result = smallWorld.sortCardListByName(result);
+    //smallWorld.printCardName(result);
 }
 
 setup();
