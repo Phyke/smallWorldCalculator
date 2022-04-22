@@ -42,8 +42,8 @@ app.listen(PORT, () => {
 
 let mainDeckMonsterList;
 async function setup() {
-    const x = await smallWorld.getMainDeckMonster();
-    console.log(x);
+    //const x = await smallWorld.getMainDeckMonster();
+    //console.log(x);
     
     //const x = smallWorld.searchMiddle(mainDeckMonsterList, 93013676, 45796834);
     //smallWorld.printCardName(x);

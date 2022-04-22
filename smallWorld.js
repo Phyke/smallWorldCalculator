@@ -95,7 +95,7 @@ async function getCardMap() {
     const cardList = await queryFromCDB("cards.cdb", "datas");
     const textList = await queryFromCDB("cards.cdb", "texts");
     const cardMap = createCardMapFromArray(cardList, textList);
-    console.log(cardMap.size);
+    console.log("total card read from DB = ", cardMap.size);
     return cardMap;
 }
 
@@ -115,6 +115,28 @@ async function getMainDeckMonster() {
     return filterMainDeckMonster(await getCardMap());
 }
 
+function getRelatedCardFromId(cardMap_Full, cardMap_Ref, cardId) {
+    let count = 0;
+    const relatedMap = new Map();
+    const baseCard = cardMap_Full.get(cardId);
+    for (const [key, value] of cardMap_Ref) {
+        if(value.type == baseCard.type) count++;
+        if(value.attribute == baseCard.attribute) count++;
+        if(value.level == baseCard.level) count++;
+        if(value.atk == baseCard.atk) count++;
+        if(value.def == baseCard.def) count++;
+        if(count == 1) relatedMap.set(key, value);
+        count = 0;
+    }
+    return relatedMap;
+}
+
+const main = await getMainDeckMonster();
+const related = getRelatedCardFromId(main, main, 2009101);
+console.log(related.size);
+const result = getRelatedCardFromId(main, related, 10000080);
+console.log(result.size);
+
 /*
 function getFieldList(cardList, field) {
     const typeList = [];
@@ -130,22 +152,7 @@ function getCardIndexById(cardList, id) {
     return cardList.findIndex(card => card.id == id);
 }
 
-function compareCount(fullCardlist, middleCardList, index) {
-    let count = 0;
-    const resultList = [];
-    //console.log(cardList);
-    //console.log("index", index);
-    for (const middleCard of middleCardList) {
-        if(fullCardlist[index].race == middleCard.race) count++;
-        if(fullCardlist[index].attribute == middleCard.attribute) count++;
-        if(fullCardlist[index].level == middleCard.level) count++;
-        if(fullCardlist[index].atk == middleCard.atk) count++;
-        if(fullCardlist[index].def == middleCard.def) count++;
-        if(count == 1) resultList.push(middleCard);
-        count = 0;
-    }
-    return resultList;
-}
+
 
 function searchMiddle(cardList, id1, id3) {
     let firstResult = compareCount(cardList, cardList, getCardIndexById(cardList, id1));
