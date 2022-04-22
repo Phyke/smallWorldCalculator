@@ -32,7 +32,7 @@ Map of Cards [
         ot: <number>
         alias: <number>
         setcode: <number>
-        cate: <number>
+        category: <number>
         atf: <number>
         def: <number>
         level: <number>
@@ -99,6 +99,23 @@ async function getCardMap() {
     return cardMap;
 }
 
+function filterMainDeckMonster(cardMap) {
+    const cardMap_Main = new Map();
+    for (const [key, value] of cardMap) {
+        for (let j = 0; j < allowedTypeList.length; j++) {
+            if (value.cate == allowedTypeList[j]) {
+                cardMap_Main.set(key, value);
+            }
+        }
+    }
+    return cardMap_Main;
+}
+
+async function getMainDeckMonster() {
+    return filterMainDeckMonster(await getCardMap());
+}
+
+/*
 function getFieldList(cardList, field) {
     const typeList = [];
     let len = cardList.length;
@@ -107,20 +124,6 @@ function getFieldList(cardList, field) {
     }
     console.log(typeList);
     return typeList;
-}
-
-function filterMainDeckMonster(cardList) {
-    const mainDeckMonster = [];
-    let len_I = cardList.length;
-    let len_J = allowedTypeList.length;
-    for (let i = 0; i < len_I; i++) {
-        for (let j = 0; j < len_J; j++) {
-            if (cardList[i].type == allowedTypeList[j]) {
-                mainDeckMonster.push(cardList[i]);
-            }
-        }
-    }
-    return mainDeckMonster;
 }
 
 function getCardIndexById(cardList, id) {
@@ -213,20 +216,7 @@ function getCardIdNameDesc(cardList) {
     }
     return result;
 }
-
+*/
 export default {
-    getFieldList,
-    filterMainDeckMonster,
-    getCardIndexById,
-    compareCount,
-    searchMiddle,
-    filterbyField,
-    printCardImage,
-    sortCardListByName,
-    printCardName,
-    searchAllPossible,
-    queryFromCDB,
-    getCardIdNameDesc,
-    createCardMapFromArray,
-    getCardMap
+    getMainDeckMonster
 }

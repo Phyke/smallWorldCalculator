@@ -42,12 +42,8 @@ app.listen(PORT, () => {
 
 let mainDeckMonsterList;
 async function setup() {
-    smallWorld.getCardMap();
-    /*let cardList = await smallWorld.queryFromCDB("datas");
-    let textList = await smallWorld.queryFromCDB("texts");
-    smallWorld.mergeDataWithText(cardList, textList);
-    mainDeckMonsterList = smallWorld.filterMainDeckMonster(cardList);
-    console.log(mainDeckMonsterList.length);*/
+    const x = await smallWorld.getMainDeckMonster();
+    console.log(x);
     
     //const x = smallWorld.searchMiddle(mainDeckMonsterList, 93013676, 45796834);
     //smallWorld.printCardName(x);
