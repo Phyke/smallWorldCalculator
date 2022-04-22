@@ -2,6 +2,10 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import * as constants from "./constants.js";
 
+/**
+ * - Variable containing constants of only main deck monster.
+ * - Because "Small World" can search onlymain deck monster.
+ */
 const allowedTypeList = [
     constants.CATE_Monster_Normal, 
     constants.CATE_Monster_Normal_Tuner, 
@@ -46,8 +50,14 @@ Map of Cards [
 ]
 
 */
-
+/**Class representating a card */
 class CARD {
+    /**
+     * - Create a card by using only important data.
+     * - Input parameters are based on data structure from the DB.
+     * @param {CardObjectFromDB} cardData Data from table "datas" in DB
+     * @param {TextObjectFromDB} cardText Data from table "texts" in DB
+     */
     constructor(cardData, cardText) {
         this.cate = cardData.type;
         this.attribute = cardData.attribute;
@@ -66,18 +76,31 @@ class CARD {
     }
 }
 
+/**
+ * - Query data from SQLite Database.
+ * @param {string} fileName File name of the database to open in the same directory
+ * @param {string} table Table name in the database to query
+ * @returns {Promise<cardArray[]>} Array of objects from DB
+ */
 async function queryFromCDB(fileName, table) {
     const db = await open({
         filename: fileName,
         driver: sqlite3.Database,
     });
     const result = await db.all(`SELECT * FROM ${table}`);
-    //console.log(result);
 
     await db.close();
     return result;
 }
 
+/**
+ * Create Map of cards by merging card datas and texts from DB into CARD class.
+ * - Key = Card ID
+ * - Value = CARD class object
+ * @param {cardArray[]} cardList Array of card objects from DB
+ * @param {textArray[]} textList Array of text objects from DB
+ * @returns {Map<id, CARD>} Map of cards
+ */
 function createCardMapFromArray(cardList, textList) {
     const cardMap = new Map();
     for (let i = 0; i < cardList.length; i++) {
@@ -91,6 +114,12 @@ function createCardMapFromArray(cardList, textList) {
     return cardMap;
 }
 
+/**
+ * This function wraps around other functions for easy function calling.
+ * - 2 queries from DB
+ * - Use data from DB to create Map of cards
+ * @returns {Promise<Map<id, CARD>>} Map of cards
+ */
 async function getCardMap() {
     const cardList = await queryFromCDB("cards.cdb", "datas");
     const textList = await queryFromCDB("cards.cdb", "texts");
@@ -99,6 +128,11 @@ async function getCardMap() {
     return cardMap;
 }
 
+/**
+ * This function use global variable to filter only main deck monster.
+ * @param {Map<id, CARD>} cardMap Map of cards
+ * @returns {Map<id, CARD>} Map of cards (main deck monsters)
+ */
 function filterMainDeckMonster(cardMap) {
     const cardMap_Main = new Map();
     for (const [key, value] of cardMap) {
@@ -111,10 +145,22 @@ function filterMainDeckMonster(cardMap) {
     return cardMap_Main;
 }
 
+/**
+ * This function wraps around other functions for easy function calling.
+ * @returns {Promise<Map<id, CARD>>} Map of cards (main deck monsters)
+ */
 async function getMainDeckMonster() {
     return filterMainDeckMonster(await getCardMap());
 }
 
+/**
+ * Find cards that have the "Small World" relation with the base card.
+ * - Exactly one match of [Type, Attribute, ATK, DEF, Level]
+ * @param {Map<id, CARD>} cardMap_Full Full Map of cards (for getting data of the base card)
+ * @param {Map<id, CARD>} cardMap_Ref Reference Map of cards (for searching and filtering)
+ * @param {number} cardId ID of the base card
+ * @returns {Map<id, CARD>} Map of cards that have the "Small World" relation
+ */
 function getRelatedCardFromId(cardMap_Full, cardMap_Ref, cardId) {
     let count = 0;
     const relatedMap = new Map();
